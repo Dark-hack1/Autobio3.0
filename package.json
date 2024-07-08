@@ -1,0 +1,14 @@
+{
+  "name": "autobio3.0",
+  "version": "1.0.0",
+  "description": "WhatsApp bot for auto bio update",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.4.0",
+    "moment-timezone": "^0.5.43",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
