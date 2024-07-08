@@ -1,9 +1,6 @@
 const { default: makeWASocket, DisconnectReason, useMultiFileAuthState } = require('@adiwajshing/baileys');
 const moment = require('moment-timezone');
 const fs = require('fs');
-const path = require('path');
-
-const sessionFile = './session.json';
 
 async function connectToWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
@@ -11,7 +8,6 @@ async function connectToWhatsApp() {
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: true,
-        defaultQueryTimeoutMs: undefined,
     });
 
     sock.ev.on('connection.update', (update) => {
@@ -23,7 +19,7 @@ async function connectToWhatsApp() {
                 connectToWhatsApp();
             }
         } else if (connection === 'open') {
-            console.log('Opened connection');
+            console.log('Connected to WhatsApp');
             startBioUpdateCycle(sock);
             stayOnline(sock);
         }
@@ -35,8 +31,12 @@ async function connectToWhatsApp() {
 async function updateBio(sock) {
     const time = moment().tz('America/Port-au-Prince').format('ddd DD MMM YYYY HH:mm');
     const bio = `${time} ☑️🎚️I need someone`;
-    await sock.updateProfileStatus(bio);
-    console.log('Updated bio:', bio);
+    try {
+        await sock.updateProfileStatus(bio);
+        console.log('Updated bio:', bio);
+    } catch (error) {
+        console.error('Failed to update bio:', error);
+    }
 }
 
 function startBioUpdateCycle(sock) {
